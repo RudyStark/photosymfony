@@ -9,9 +9,9 @@
                 <img src="{{ photo.url }}" class="img-fluid" alt="Photo description">
                 <h3 class="mt-2 text-center">{{ photo.title }}</h3>
                 <p>{{ photo.description }}</p>
-                <p><strong>Tags:</strong>
+                <p class="fw-bold">Tags:
                     {% for tag in photo.tags %}
-                        <a href="{{ path('tag_show', {'slug': tag.slug}) }}" style="font-weight: bold; color: black;">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
+                        <a href="{{ path('tag_show', {'slug': tag.slug}) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </p>
             </div>

@@ -14,13 +14,12 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create();
 
-        // tableau pour stocker les références aux objets Tag
+        // Tableau pour stocker les références aux objets Tag
         $tags = [];
 
         for ($i = 0; $i < 10; $i++) {
             $tag = new Tag();
-            $tag->setName($faker->unique()->word)
-                ->setSlug($faker->slug);
+            $tag->setName($faker->unique()->word);
 
             $manager->persist($tag);
             $tags[] = $tag;
@@ -46,4 +45,5 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 }
+
 
