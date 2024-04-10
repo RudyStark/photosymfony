@@ -21,6 +21,15 @@ class PhotoRepository extends ServiceEntityRepository
         parent::__construct($registry, Photo::class);
     }
 
+    //FindByTitle
+    public function findByTitle(string $query): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.title LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return Photo[] Returns an array of Photo objects
     //     */
