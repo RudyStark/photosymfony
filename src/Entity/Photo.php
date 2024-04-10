@@ -40,12 +40,6 @@ class Photo
     #[ORM\Column(nullable: true)]
     private ?array $metaInfo = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $modifiedAt = null;
-
     /**
      * @var Collection<int, Tag>
      */
