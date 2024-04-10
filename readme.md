@@ -19,6 +19,7 @@ erDiagram
         string(255) url
         float price
         json meta_info
+        string slug
         date created_at
         date modified_at
     }
@@ -40,6 +41,7 @@ erDiagram
     tag {
         int id PK
         string(255) name
+        string(255) slug
     }
 
     photo_tag {
