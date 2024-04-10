@@ -11,7 +11,7 @@
                 <p>{{ photo.description }}</p>
                 <p><strong>Tags:</strong>
                     {% for tag in photo.tags %}
-                        <span style="font-weight: bold; color: black;">{{ tag.name }}</span>{% if not loop.last %}, {% endif %}
+                        <a href="{{ path('tag_show', {'slug': tag.slug}) }}" style="font-weight: bold; color: black;">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </p>
             </div>
