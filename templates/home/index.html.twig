@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home !{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            {% for photo in photos %}
+                <div class="col-6 col-md-2 mb-4">
+                    <div class="card" style="width: 100%;">
+                        <img src="{{ photo.url }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ photo.title }}</h5>
+                            <p class="card-text">{{ photo.description }}</p>
+                            <p class="card-text">{{ photo.createdAt|date('d/m/Y') }}</p>
+                            <a href="{{ path('app_display_photo', {'slug': photo.slug}) }}">Voir la photo</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
