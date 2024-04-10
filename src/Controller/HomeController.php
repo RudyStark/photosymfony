@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Photo;
 use App\Repository\PhotoRepository;
+use App\Service\SearchService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
 {
@@ -41,4 +44,22 @@ class HomeController extends AbstractController
             'photo' => $photo,
         ]);
     }
+
+    //Search
+    #[Route('/search', name: 'app_search')]
+    public function search(Request $request, SearchService $searchService, SessionInterface $session): Response
+    {
+        $query = $request->query->get('query', '');
+
+        $photos = $searchService->searchByQuery($query);
+
+        if (empty($query)) {
+            $session->getFlashBag()->add('info', 'Votre recherche est vide, voici toutes les photos.');
+        }
+
+        return $this->render('photo/search.html.twig', [
+            'photos' => $photos,
+        ]);
+    }
+
 }

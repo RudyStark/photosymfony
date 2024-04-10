@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <h2>Résultats de la recherche</h2>
+    <div class="row">
+        {% for photo in photos %}
+            <div class="col-md-4 mb-3">
+                <img src="{{ photo.url }}" alt="{{ photo.title }}" class="img-fluid">
+                <h5>{{ photo.title }}</h5>
+                <p>{{ photo.description }}</p>
+                <p class="fw-bold">Tags:
+                    {% for tag in photo.tags %}
+                        <a href="{{ path('tag_show', {'slug': tag.slug}) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+        {% else %}
+            <p>Aucune photo trouvée.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
