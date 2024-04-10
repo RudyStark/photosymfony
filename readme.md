@@ -4,14 +4,28 @@
 
 ```mermaid
 erDiagram
+    
+    user {
+        int id PK
+        string(255) email
+        string(255) password
+        date created_at
+        date modified_at
+    }
+
     customer {
         int id PK
-        string(255) name
-        string(255) email
+        string(255) firstname
+        string(255) lastname
         int age
+        string(255) address
         string(255) city
+        string(255) country
         date created_at
+        date modified_at
+        int user_id FK
     }
+    
     photo {
         int id PK
         string(255) title
@@ -49,6 +63,7 @@ erDiagram
         int photo_id PK, FK
     }
 
+    user ||--|| customer : has
     customer ||--o{ order : has
     order ||--o{ order_item : contains
     photo ||--o{ order_item : contains
