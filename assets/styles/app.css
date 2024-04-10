@@ -1,5 +1,19 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
 body {
-    background-color: #f0f0f0;
+    background-color: #f0f8ff;
+}
+
+.card {
+    border: none;
+    transition: transform .2s;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+.card-img-top {
+    border-top-left-radius: calc(.25rem - 1px);
+    border-top-right-radius: calc(.25rem - 1px);
+    height: 200px;
+    object-fit: cover;
 }
