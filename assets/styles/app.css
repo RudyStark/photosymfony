@@ -17,3 +17,40 @@ body {
     height: 200px;
     object-fit: cover;
 }
+
+.cart-icon-container {
+    position: relative;
+    font-size: 20px; /* Taille de l'icône du panier */
+}
+
+.cart-icon-container i {
+    font-size: 20px; /* Vous pouvez également ajuster directement la taille de l'icône ici */
+}
+
+.cart-count {
+    color: white;
+    padding: 2px; /* Ajustez le padding pour la taille du cercle */
+    font-size: 18px; /* Taille du texte à l'intérieur du cercle */
+}
+
+.cart-item-card {
+    margin-bottom: 1rem;
+}
+.cart-photo {
+    max-width: 80px;
+    height: auto;
+    margin-right: 1rem;
+}
+.cart-item-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+.cart-total {
+    text-align: right;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+}
+.btn-cart-action {
+    margin: 0 5px;
+}
