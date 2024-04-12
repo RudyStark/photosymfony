@@ -15,10 +15,48 @@
                             <p class="card-text">{{ photo.createdAt|date('d/m/Y') }}</p>
                             <a href="{{ path('app_display_photo', {'slug': photo.slug}) }}">Voir la photo</a>
                         </div>
+{#                        prix#}
+                        <div class="card-footer text-center">
+                            <strong>{{ photo.price }} €</strong>
+                        </div>
+                        <button class="btn btn-secondary add-to-cart" data-photo-id="{{ photo.id }}">
+                            Ajouter au panier
+                        </button>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const photoId = this.dataset.photoId;
+
+                    fetch(`/cart/add/${photoId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const cartCount = document.querySelector('.cart-count');
+                            if (cartCount) {
+                                cartCount.textContent = data.total;
+                            }
+                        })
+                        .catch(error => console.error('Erreur:', error));
+                });
+            });
+        });
+    </script>
+
+
 {% endblock %}
 
