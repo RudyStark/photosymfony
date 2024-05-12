@@ -11,6 +11,7 @@ use App\Entity\Traits\TimestampableTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 
+
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
 class Photo
@@ -23,7 +24,6 @@ class Photo
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Gedmo\Translatable]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -33,7 +33,6 @@ class Photo
     private ?string $url = null;
 
     #[ORM\Column]
-    #[Gedmo\Translatable]
     private ?float $price = null;
 
     #[Gedmo\Slug(fields: ['title'])]
