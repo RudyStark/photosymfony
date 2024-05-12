@@ -2,126 +2,135 @@
 
 namespace App\Controller;
 
+use App\Entity\Photo;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Repository\PhotoRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/cart')]
 class CartController extends AbstractController
 {
-    #[Route('/add/{id}', name: 'cart_add', methods: ['POST'])]
-    public function add($id, Request $request, SessionInterface $session): Response
+    /**
+     * Utilisation temporaire d'une valeur de TVA - A rajouter dans la base avec les produits!
+     */
+    private const TVA = 0.2;
+
+    #[Route('/cart', name: 'app_cart')]
+    public function index(SessionInterface $session)
     {
-        // Récupération du panier actuel depuis la session, ou initialisation à un tableau vide si non existant
-        $cart = $session->get('cart', []);
+        $items = $session->get('cart', []);
 
-        // Vérification si l'ID de la photo existe déjà dans le panier
-        if (!empty($cart[$id])) {
-            // Incrémentation de la quantité pour cet ID de photo
-            $cart[$id]['quantity']++;
-        } else {
-            // Ajout de la photo avec une quantité initiale de 1 si elle n'est pas déjà dans le panier
-            $cart[$id] = ['quantity' => 1];
-        }
+        $cartTotal = $this->calculTotalCart($items);
 
-        // Mise à jour de la session avec le nouveau panier
-        $session->set('cart', $cart);
-
-        // Vérification si la requête est une requête AJAX
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'total' => array_sum(array_map(function ($item) {
-                    return $item['quantity'];
-                }, $cart))
-            ]);
-        }
-
-        return $this->redirectToRoute('cart_show');
-    }
-
-    #[Route('/', name: 'cart_show', methods: ['GET'])]
-    public function show(SessionInterface $session, PhotoRepository $photoRepository): Response
-    {
-        $cart = $session->get('cart', []);
-        $cartWithData = [];
-
-        foreach ($cart as $id => $details) {
-            $photo = $photoRepository->find($id);
-            if ($photo) {
-                $cartWithData[] = [
-                    'photo' => $photo,
-                    // Assurez-vous que 'quantity' est défini comme un entier ou un flottant ici
-                    'quantity' => $details['quantity'] // Modifiez selon la structure réelle de votre tableau
-                ];
-            }
-        }
-
-        // Total du panier
-        $total = 0;
-        foreach ($cartWithData as $item) {
-            $total += $item['photo']->getPrice() * $item['quantity'];
-        }
-
-        return $this->render('cart/show.html.twig', [
-            'items' => $cartWithData,
-            'total' => $total,
+        return $this->render('cart/index.html.twig', [
+            'subtotal' => $cartTotal['subtotal'],
+            'tva' => $cartTotal['tva'],
+            'total' => $cartTotal['total'],
+            'items' => $items
         ]);
     }
 
-    #[Route('/increase/{id}', name: 'cart_increase', methods: ['GET'])]
-    public function increase($id, SessionInterface $session): Response
+    /** Retourne le total panier */
+    public function calculTotalCart(array $items)
     {
-        $cart = $session->get('cart', []);
-        if (isset($cart[$id])) {
-            // Incrémentez spécifiquement la quantité de l'article.
-            $cart[$id]['quantity']++;
-        } else {
-            // Si l'article n'est pas encore dans le panier, on ajoute l'article avec une quantité de 1.
-            $cart[$id] = ['quantity' => 1];
+        $cartTotal = ['subtotal' => 0, 'tva' => 0, 'total' => 0, 'qty' => 0];
+        // Calcul total Price
+        foreach ($items as $item) {
+
+            $cartTotal['subtotal']  += $item['priceHT'] * $item['qty'];
+            $cartTotal['tva']       += $item['tva'];
+            $cartTotal['total']     += $item['price'] * $item['qty'];
         }
+        return $cartTotal;
+    }
+
+    public function formatPrice(int $price)
+    {
+        return number_format($price, 2, ',', ' ');
+    }
+
+    #[Route('/cart/add', name: 'app_cart_add', methods: ['POST'])]
+    public function add(SessionInterface $session, PhotoRepository $repository, Request $request)
+    {
+        $id = $request->request->get('id', null);
+        if ($id == null)
+            return $this->redirectToRoute('app_home'); //nothing to do here
+
+        $photo = $repository->find($id);
+        $cart = $session->get('cart', []);
+
+        /*  $cart = [];
+         $session->set('cart', $cart);
+         exit(); */
+
+        if (isset($cart[$id]) && isset($cart[$id]['qty']))
+            $cart[$id]['qty'] += $request->request->get('qty', 0);
+        else {
+            $cart[$id]['url'] = $photo->getUrl();
+            $cart[$id]['qty'] = $request->request->get('qty', 0);
+            $cart[$id]['title'] = $photo->getTitle();
+            $cart[$id]['slug'] = $photo->getSlug();
+            $cart[$id]['price'] = $photo->getPrice();
+            $cart[$id]['priceHT'] = round($photo->getPrice() - $photo->getPrice() * self::TVA,2);
+            $cart[$id]['tva'] = round($photo->getPrice()*self::TVA,2);
+        }
+        //$cart['qty'] += $request->request->get('qty', 0);
+
         $session->set('cart', $cart);
 
-        return $this->redirectToRoute('cart_show');
+
+        // Total QTY in cart
+        $cartQty = array_reduce($cart, fn ($sum, $item): int => $sum + $item['qty'], 0);
+
+        // Put this value on session for displaying on reload of page
+        $session->set('cartQty', $cartQty);
+
+        //dd(TurboBundle::STREAM_FORMAT, $request->getPreferredFormat());
+        if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+            // If the request comes from Turbo, set the content type as text/vnd.turbo-stream.html and only send the HTML to update
+
+            return $this->render(
+                'cart/_cartNav.html.twig',
+                [
+                    'cartQty' => $cartQty,
+                    'photo' => $photo
+                ],
+                new Response('',
+                    200,
+                    ['content-type' => TurboBundle::STREAM_MEDIA_TYPE]
+                )
+            );
+        }
+
+        // si pas de TURBO (js desactive) : redirection vers la panier !
+        return $this->redirectToRoute('app_cart');
     }
 
-    #[Route('/decrease/{id}', name: 'cart_decrease', methods: ['GET'])]
-    public function decrease($id, SessionInterface $session): Response
+
+    #[Route('/cart/update/{id}', name: 'app_cart_update')]
+    public function changeQuantity($id=null, SessionInterface $session, Request $request)
     {
         $cart = $session->get('cart', []);
-        if (isset($cart[$id]) && $cart[$id]['quantity'] > 1) {
-            // Décrémentez la quantité de l'article.
-            $cart[$id]['quantity']--;
-        } else {
-            // On supprime l'article du panier si la quantité est inférieure ou égale à 1.
-            unset($cart[$id]);
+        $qty = $request->request->get('qty', null);
+        if ($id !== null && isset($cart[$id]) && $qty !== null) {
+            if($qty == 0)
+                unset($cart[$id]);
+            else
+                $cart[$id]['qty'] = $qty;
         }
+
         $session->set('cart', $cart);
 
-        return $this->redirectToRoute('cart_show');
+        // Total QTY in cart
+        $cartQty = array_reduce($cart, fn ($sum, $item): int => $sum + $item['qty'], 0);
+
+        // Put this value on session for displaying on reload of page
+        $session->set('cartQty', $cartQty);
+
+        return $this->redirectToRoute('app_cart');
     }
-
-
-    #[Route('/remove/{id}', name: 'cart_remove', methods: ['GET'])]
-    public function remove($id, SessionInterface $session): Response
-    {
-        $cart = $session->get('cart', []);
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
-        }
-        $session->set('cart', $cart);
-
-        return $this->redirectToRoute('cart_show');
-    }
-
-    #[Route('/clear', name: 'cart_clear', methods: ['GET'])]
-    public function clear(SessionInterface $session): Response
-    {
-        $session->remove('cart');
-
-        return $this->redirectToRoute('cart_show');
-    }
-
 }

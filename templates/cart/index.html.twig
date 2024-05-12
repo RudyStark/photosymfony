@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre panier{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="mt-50">
+            <h2>Votre panier</h2>
+        </div>
+        <div class="col-12 col-lg-8">
+            <turbo-frame id="product">
+                <table class="table table-responsive" data-controller="">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Nom</th>
+                        <th>Quantité</th>
+                        <th>Prix HT</th>
+                        <th>TVA</th>
+                        <th>Prix TTC</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for id, item in items %}
+                        <tr>
+                            <td class="cart_product_img">
+                                <a href="{{ path('app_display_photo', {'slug' : item.slug })}}"><img src="{{ item.url }}" alt="{{ item.title }}" width="100"></a>
+                            </td>
+                            <td class="cart_product_desc">
+                                <h5><a href="{{ path('app_display_photo', {'slug' : item.slug })}}">{{ item.title }}</a></h5>
+                            </td>
+                            <td class="qty">
+                                <div class="qty-btn d-flex">
+                                    <div class="quantity">
+                                        <form action="{{ path('app_cart_update', {id: id}) }}" data-controller="qty" method="POST">
+                                            <input data-action="qty#submit" type="number" class="form-control" step="1" min="0" max="300" name="qty" value="{{ item.qty }}">
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+
+
+                            <td class="price">
+                                <span>{{ (item.priceHT * item.qty)|format_currency('EUR', locale='fr') }}</span>
+                            </td>
+                            <td class="price">
+                                <span>{{ (item.tva * item.qty)|format_currency('EUR', locale='fr') }}</span>
+                            </td>
+                            <td class="price">
+                                <span>{{ (item.price * item.qty)|format_currency('EUR', locale='fr') }}</span>
+                            </td>
+
+
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">Votre panier est vide !</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </turbo-frame>
+        </div>
+        <div class="col-12 col-lg-4">
+            <h3>Montant du panier</h3>
+            <turbo-frame id="total">
+                <ul>
+                    <li><span>Total HT :</span> <span id="subtotal">{{ subtotal |format_currency('EUR', locale='fr') }}</span></li>
+                    <li><span>TVA :</span> <span id="tva">{{ tva |format_currency('EUR', locale='fr') }}</span></li>
+                    <li><span>Frais de port :</span> <span>Gratuits</span></li>
+                    <li><span>Total TTC :</span> <span id="totalTTC">{{ total|format_currency('EUR', locale='fr') }}</span></li>
+                </ul>
+            </turbo-frame>
+            <div class="cart-btn mt-100">
+                <a href="{{ path('app_order') }}" class="btn btn-success w-100">Valider la commande</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

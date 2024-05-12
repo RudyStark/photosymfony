@@ -4,53 +4,90 @@ body {
     background-color: #f0f8ff;
 }
 
-.card {
+/*.card {*/
+/*    border: none;*/
+/*    transition: transform .2s;*/
+/*}*/
+/*.card:hover {*/
+/*    transform: scale(1.05);*/
+/*}*/
+/*.card-img-top {*/
+/*    border-top-left-radius: calc(.25rem - 1px);*/
+/*    border-top-right-radius: calc(.25rem - 1px);*/
+/*    height: 200px;*/
+/*    object-fit: cover;*/
+/*}*/
+
+/*.cart-icon-container {*/
+/*    position: relative;*/
+/*    font-size: 20px; !* Taille de l'icône du panier *!*/
+/*}*/
+
+/*.cart-icon-container i {*/
+/*    font-size: 20px; !* Vous pouvez également ajuster directement la taille de l'icône ici *!*/
+/*}*/
+
+/*.cart-count {*/
+/*    color: white;*/
+/*    padding: 2px; !* Ajustez le padding pour la taille du cercle *!*/
+/*    font-size: 18px; !* Taille du texte à l'intérieur du cercle *!*/
+/*}*/
+
+/*.cart-item-card {*/
+/*    margin-bottom: 1rem;*/
+/*}*/
+/*.cart-photo {*/
+/*    max-width: 80px;*/
+/*    height: auto;*/
+/*    margin-right: 1rem;*/
+/*}*/
+/*.cart-item-actions {*/
+/*    margin-left: auto;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*}*/
+/*.cart-total {*/
+/*    text-align: right;*/
+/*    font-size: 1.5rem;*/
+/*    margin-top: 2rem;*/
+/*}*/
+/*.btn-cart-action {*/
+/*    margin: 0 5px;*/
+/*}*/
+
+.container {
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.form-control {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-check-label {
+    margin-left: 0.5rem;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
     border: none;
-    transition: transform .2s;
-}
-.card:hover {
-    transform: scale(1.05);
-}
-.card-img-top {
-    border-top-left-radius: calc(.25rem - 1px);
-    border-top-right-radius: calc(.25rem - 1px);
-    height: 200px;
-    object-fit: cover;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
-.cart-icon-container {
-    position: relative;
-    font-size: 20px; /* Taille de l'icône du panier */
+.btn-primary:hover {
+    background-color: #0056b3;
 }
 
-.cart-icon-container i {
-    font-size: 20px; /* Vous pouvez également ajuster directement la taille de l'icône ici */
-}
-
-.cart-count {
-    color: white;
-    padding: 2px; /* Ajustez le padding pour la taille du cercle */
-    font-size: 18px; /* Taille du texte à l'intérieur du cercle */
-}
-
-.cart-item-card {
-    margin-bottom: 1rem;
-}
-.cart-photo {
-    max-width: 80px;
-    height: auto;
-    margin-right: 1rem;
-}
-.cart-item-actions {
-    margin-left: auto;
+.needs-validation {
     display: flex;
-    align-items: center;
-}
-.cart-total {
-    text-align: right;
-    font-size: 1.5rem;
-    margin-top: 2rem;
-}
-.btn-cart-action {
-    margin: 0 5px;
+    flex-direction: column;
+    gap: 15px;
 }

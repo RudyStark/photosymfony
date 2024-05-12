@@ -27,14 +27,12 @@
                     </li>
                 {% endif %}
                 {% if app.user %}
-                        <div class="cart-icon-container">
-                            <a href="{{ path('cart_show') }}" class="cart-icon">
-                                <i class="fas fa-shopping-cart"></i>
-                                <span class="cart-count">
-                                    <span class="cart-count">{{ total_cart_items() }}</span>
-                                </span>
-                            </a>
-                        </div>
+                    <li class="nav-item"><a class="nav-link"> | </a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_cart') }}">
+                            <button type="button" class="btn btn-primary position-relative"><i class="icon-shopping-cart"></i> <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success" id="cart">{% if app.session.get('cartQty') is defined %}{{ app.session.get('cartQty') }}{% else %}0{% endif %}</span></button>
+                        </a>
+                    </li>
                 {% endif %}
             </ul>
             <form class="d-flex" action="{{ path('app_search') }}" method="get">

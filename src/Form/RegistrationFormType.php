@@ -34,8 +34,8 @@ class RegistrationFormType extends AbstractType
                 'invalid_message' => 'Les mots de passe doivent correspondre.',
                 'options' => ['attr' => ['class' => 'password-field form-control', 'autocomplete' => 'new-password']],
                 'required' => true,
-                'first_options' => ['label' => 'Password', 'attr' => ['placeholder' => 'Password']],
-                'second_options' => ['label' => 'Repeat Password', 'attr' => ['placeholder' => 'Repeat Password']],
+                'first_options' => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Répéter le mot de passe'],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer un mot de passe',
