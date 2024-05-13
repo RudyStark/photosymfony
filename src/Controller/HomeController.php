@@ -62,4 +62,20 @@ class HomeController extends AbstractController
         ]);
     }
 
+    /**
+     * Recherche des photos par tag
+     * @param string $tagName
+     * @param SearchService $searchService
+     * @return Response
+     */
+    #[Route('/search/tag/{tagName}', name: 'app_search_tag')]
+    public function searchByTag(string $tagName, SearchService $searchService): Response
+    {
+        $photos = $searchService->searchByQuery($tagName);
+
+        return $this->render('photo/search.html.twig', [
+            'photos' => $photos,
+        ]);
+    }
+
 }
