@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Photo;
+use App\Form\PhotoFormType;
 use App\Form\TagFormType;
 use App\Repository\PhotoRepository;
 use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -35,7 +37,7 @@ class HomeController extends AbstractController
 
     //display photo
     #[Route('/photo/{slug}', name: 'app_display_photo')]
-    public function displayPhoto(string $slug, PhotoRepository $photoRepository): Response
+    public function displayPhoto(string $slug, PhotoRepository $photoRepository, FormFactoryInterface $formFactory): Response
     {
         $photo = $photoRepository->findOneBySlug($slug);
 
@@ -43,8 +45,12 @@ class HomeController extends AbstractController
             throw $this->createNotFoundException('La photo demandée n\'existe pas.');
         }
 
+        // Créer le formulaire
+        $form = $this->createForm(TagFormType::class);
+
         return $this->render('home/photo.html.twig', [
             'photo' => $photo,
+            'form' => $form->createView(), // Assurez-vous de passer le formulaire à la vue
         ]);
     }
 
@@ -86,6 +92,25 @@ class HomeController extends AbstractController
             'photos' => $photos,
             'form' => $form->createView(), // Pass the form to the template
         ]);
+    }
+
+    #[Route('/search', name: 'app_search', methods: ['GET'])]
+    public function search(Request $request, PhotoRepository $photoRepository): Response
+    {
+        $query = $request->query->get('q', '');
+        $photos = $photoRepository->search($query);
+
+        // Map the photos to an array that includes the URL of each photo
+        $photos = array_map(function ($photo) {
+            return [
+                'id' => $photo->getId(),
+                'title' => $photo->getTitle(),
+                'url' => $this->generateUrl('app_display_photo', ['slug' => $photo->getSlug()]), // Generate the URL of the photo
+                'thumbnailUrl' => $photo->getUrl(), // Use the photo URL as the thumbnail URL
+            ];
+        }, $photos);
+
+        return $this->json($photos);
     }
 
 }
