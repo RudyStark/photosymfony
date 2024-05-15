@@ -1,0 +1,30 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Photo Details{% endblock %}
+
+{% block admin_content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            Photo Details
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ photo.title }}</h5>
+            <p class="card-text"><strong>Description:</strong> {{ photo.description }}</p>
+            <!-- Display the photo -->
+            <p class="card-text"><strong>Photo:</strong><br><img src="{{ photo.url }}" alt="{{ photo.title }}" class="img-fluid"></p>
+            <p class="card-text"><strong>Price:</strong> {{ photo.price }}</p>
+            <p class="card-text"><strong>Meta Info:</strong> {{ photo.metaInfo ? photo.metaInfo|json_encode : 'N/A' }}</p>
+            <p class="card-text"><strong>Created At:</strong> {{ photo.createdAt ? photo.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</p>
+            <p class="card-text"><strong>Modified At:</strong> {{ photo.modifiedAt ? photo.modifiedAt|date('Y-m-d H:i:s') : 'N/A' }}</p>
+            <p class="card-text"><strong>Slug:</strong> {{ photo.slug }}</p>
+            <!-- Adjustments for the "Back to list" button -->
+            <div class="d-flex justify-content-end">
+                <a href="{{ path('app_admin_photo_index') }}" class="btn btn-primary btn-sm"><i class="fas fa-arrow-left"></i> Back to list</a>
+            </div>
+            <a href="{{ path('app_admin_photo_edit', {'id': photo.id}) }}" class="btn btn-secondary mt-2">Edit</a>
+            {{ include('admin/admin_photo/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

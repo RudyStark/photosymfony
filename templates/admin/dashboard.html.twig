@@ -1,0 +1,22 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block admin_content %}
+<h2>Dashboard</h2>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        Nombre d'utilisateurs enregistrés sur le site: {{ count_users }}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        Nombre de photos: {{ count_photos }}
+      </div>
+    </div>
+  </div>
+  <!-- Ajoutez plus de blocs ici selon vos besoins -->
+</div>
+{% endblock %}

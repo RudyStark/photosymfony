@@ -14,7 +14,7 @@ class OrderController extends AbstractController
     public function index(): Response
     {
         // place for add order on data and display it !
-        return $this->render('order/index.html.twig', [
+        return $this->render('order/admin_base.html.twig', [
             'controller_name' => 'OrderController',
         ]);
     }

@@ -13,21 +13,19 @@ use Symfony\Component\HttpFoundation\Request;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(PhotoRepository $photoRepository, TagRepository $tagRepository): Response
+    public function index(PhotoRepository $photoRepository): Response
     {
         $photos = $photoRepository->findAll();
-        $form = $this->createForm(TagFormType::class);
 
-        return $this->render('home/index.html.twig', [
+        return $this->render('home/admin_base.html.twig', [
             'photos' => $photos,
-            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/photo', name: 'app_photo')]
     public function photoList(): Response
     {
-        return $this->render('photo/index.html.twig', [
+        return $this->render('photo/admin_base.html.twig', [
         ]);
     }
 
@@ -83,7 +81,7 @@ class HomeController extends AbstractController
 
         $form = $this->createForm(TagFormType::class);
 
-        return $this->render('home/index.html.twig', [
+        return $this->render('home/admin_base.html.twig', [
             'photos' => $photos,
             'form' => $form->createView(),
         ]);

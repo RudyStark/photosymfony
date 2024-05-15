@@ -1,0 +1,48 @@
+{{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    <div class="mb-3">
+        {{ form_label(form.title) }}
+        {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.title) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.description) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.url) }}
+        {{ form_widget(form.url, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.url) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.price) }}
+        {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.price) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.meta_info) }}
+        {{ form_widget(form.meta_info, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.meta_info) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.createdAt) }}
+        {{ form_widget(form.createdAt, {'attr': {'class': 'form-control datetimepicker-input'}}) }}
+        {{ form_errors(form.createdAt) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.modifiedAt) }}
+        {{ form_widget(form.modifiedAt, {'attr': {'class': 'form-control datetimepicker-input'}}) }}
+        {{ form_errors(form.modifiedAt) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.slug) }}
+        {{ form_widget(form.slug, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.slug) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.tags) }}
+        {{ form_widget(form.tags, {'attr': {'class': 'form-select'}}) }}
+        {{ form_errors(form.tags) }}
+    </div>
+    <button type="submit" class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

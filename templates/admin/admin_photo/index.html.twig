@@ -1,0 +1,53 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Photo Index{% endblock %}
+
+{% block admin_content %}
+<div class="container">
+    <h1>Photo Index</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Url</th>
+                <th>Price</th>
+                <th>Meta_info</th>
+                <th>CreatedAt</th>
+                <th>ModifiedAt</th>
+                <th>Slug</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for photo in photos %}
+            <tr>
+                <td>{{ photo.id }}</td>
+                <td class="text-truncate" style="max-width: 150px;" title="{{ photo.title }}">{{ photo.title }}</td>
+                <td class="text-truncate" style="max-width: 200px;" title="{{ photo.description }}">{{ photo.description }}</td>
+                <td><a href="{{ photo.url }}" target="_blank" class="text-truncate" style="max-width: 100px;" title="{{ photo.url }}">View</a></td>
+                <td>{{ photo.price }}</td>
+                <td class="text-truncate" style="max-width: 150px;" title="{{ photo.metaInfo ? photo.metaInfo|json_encode : 'N/A' }}">{{ photo.metaInfo ? photo.metaInfo|json_encode : 'N/A' }}</td>
+                <td>{{ photo.createdAt ? photo.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</td>
+                <td>{{ photo.modifiedAt ? photo.modifiedAt|date('Y-m-d H:i:s') : 'N/A' }}</td>
+                <td class="text-truncate" style="max-width: 100px;" title="{{ photo.slug }}">{{ photo.slug }}</td>
+                <td>
+                    <a href="{{ path('app_admin_photo_show', {'id': photo.id}) }}" title="Show"><i class="fas fa-eye"></i></a>
+                    <a href="{{ path('app_admin_photo_edit', {'id': photo.id}) }}" title="Edit"><i class="fas fa-edit"></i></a>
+                    <form method="post" action="{{ path('app_admin_photo_delete', {'id': photo.id}) }}" onsubmit="return confirm('Are you sure?');" style="display: inline-block;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ photo.id) }}">
+                        <button type="submit" class="btn btn-link" title="Delete"><i class="fas fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="10">No records found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ path('app_admin_photo_new') }}" class="btn btn-primary">Create new</a>
+</div>
+{% endblock %}
