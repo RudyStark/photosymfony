@@ -12,7 +12,9 @@
             <h5 class="card-title">{{ photo.title }}</h5>
             <p class="card-text"><strong>Description:</strong> {{ photo.description }}</p>
             <!-- Display the photo -->
-            <p class="card-text"><strong>Photo:</strong><br><img src="{{ photo.url }}" alt="{{ photo.title }}" class="img-fluid"></p>
+            <p class="card-text"><strong>Photo:</strong><br>
+                <img src="{{ asset('uploads/' ~ photo.url) }}" alt="{{ photo.title }}" class="img-fluid w-50">
+            </p>
             <p class="card-text"><strong>Price:</strong> {{ photo.price }}</p>
             <p class="card-text"><strong>Meta Info:</strong> {{ photo.metaInfo ? photo.metaInfo|json_encode : 'N/A' }}</p>
             <p class="card-text"><strong>Created At:</strong> {{ photo.createdAt ? photo.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</p>

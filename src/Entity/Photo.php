@@ -10,8 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\TimestampableTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-
-
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
 class Photo
@@ -41,6 +39,8 @@ class Photo
 
     #[ORM\Column(nullable: true)]
     private ?array $metaInfo = null;
+
+    private $file;
 
     /**
      * @var Collection<int, Tag>
@@ -188,5 +188,24 @@ class Photo
         }
 
         return $this;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile($file)
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        if (!$this->getCreatedAt()) {
+            $this->setCreatedAt(new \DateTimeImmutable());
+        }
     }
 }

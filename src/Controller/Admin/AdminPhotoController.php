@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Photo;
 use App\Form\PhotoFormType;
 use App\Repository\PhotoRepository;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,13 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin/photo')]
 class AdminPhotoController extends AbstractController
 {
+
+    private $fileUploader;
+
+    public function __construct(FileUploader $fileUploader)
+    {
+        $this->fileUploader = $fileUploader;
+    }
     #[Route('/', name: 'app_admin_photo_index', methods: ['GET'])]
     public function index(PhotoRepository $photoRepository): Response
     {
@@ -30,6 +38,11 @@ class AdminPhotoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('file')->getData();
+            if ($file) {
+                $fileName = $this->fileUploader->upload($file);
+                $photo->setUrl($fileName);
+            }
             $entityManager->persist($photo);
             $entityManager->flush();
 
