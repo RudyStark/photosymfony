@@ -32,22 +32,14 @@ class TagRepository extends ServiceEntityRepository
         ;
     }
 
-    /**
-     * Récupère les tags les plus utilisés.
-     *
-     * @param int $limit Nombre maximum de résultats à retourner.
-     * @return array Les tags les plus utilisés.
-     */
-    public function findMostUsedTags(int $limit): array
+    public function findMostUsedTags(int $limit)
     {
         return $this->createQueryBuilder('t')
             ->select('t, COUNT(p.id) as HIDDEN count')
             ->join('t.photos', 'p')
             ->groupBy('t.id')
             ->orderBy('count', 'DESC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setMaxResults($limit);
     }
 
     //    /**

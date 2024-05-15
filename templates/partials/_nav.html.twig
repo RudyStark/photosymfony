@@ -33,14 +33,14 @@
                     </li>
                 {% endif %}
             </ul>
-            <form class="d-flex" action="{{ path('app_search') }}" method="get">
-                <select id="tagSelect" data-controller="tag-select" class="form-control me-2">
-                    <option value="">Sélectionnez un tag</option>
-                    {% for tag in app.session.get('mostUsedTags') %}
-                        <option value="{{ tag.name }}">{{ tag.name }}</option>
-                    {% endfor %}
-                </select>
-                <input class="form-control me-2" type="search" name="query" placeholder="Recherche par titre ou tag" aria-label="Search">
+            <form class="d-flex" action="{{ path('app_tags') }}" method="post">
+                {{ form_start(form, {'attr': {'class': 'd-flex'}}) }}
+                {{ form_widget(form.name, {'attr': {'class': 'form-control me-2'}}) }}
+                <button class="btn btn-outline-success" type="submit">Ok</button>
+                {{ form_end(form) }}
+            </form>
+            <form class="d-flex" action="" method="get">
+                <input class="form-control me-2" type="search" name="query" placeholder="Recherche" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Recherche</button>
             </form>
         </div>
