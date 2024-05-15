@@ -2,16 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Photo;
-use App\Form\PhotoFormType;
 use App\Form\TagFormType;
 use App\Repository\PhotoRepository;
 use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
@@ -37,7 +33,7 @@ class HomeController extends AbstractController
 
     //display photo
     #[Route('/photo/{slug}', name: 'app_display_photo')]
-    public function displayPhoto(string $slug, PhotoRepository $photoRepository, FormFactoryInterface $formFactory): Response
+    public function displayPhoto(string $slug, PhotoRepository $photoRepository): Response
     {
         $photo = $photoRepository->findOneBySlug($slug);
 
@@ -50,12 +46,12 @@ class HomeController extends AbstractController
 
         return $this->render('home/photo.html.twig', [
             'photo' => $photo,
-            'form' => $form->createView(), // Assurez-vous de passer le formulaire à la vue
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/tags', name: 'app_tags', methods: ['GET', 'POST'])]
-    public function tags(Request $request, TagRepository $tagRepository): Response
+    public function tags(Request $request): Response
     {
         $form = $this->createForm(TagFormType::class);
         $form->handleRequest($request);
@@ -63,10 +59,10 @@ class HomeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $tags = $form->get('name')->getData();
 
-            // Convert ArrayCollection to array
+            // Convertir la collection d'objets Tag en tableau
             $tagsArray = $tags->toArray();
 
-            // Convert array to string
+            // On récupère les noms des tags pour les passer en paramètre
             $tagsString = implode(',', array_map(function ($tag) { return $tag->getName(); }, $tagsArray));
 
             return $this->redirectToRoute('app_photos_by_tags', [
@@ -85,12 +81,11 @@ class HomeController extends AbstractController
         $tags = explode(',', $tags);
         $photos = $photoRepository->findByTags($tags);
 
-        // Create an instance of the form
         $form = $this->createForm(TagFormType::class);
 
         return $this->render('home/index.html.twig', [
             'photos' => $photos,
-            'form' => $form->createView(), // Pass the form to the template
+            'form' => $form->createView(),
         ]);
     }
 
@@ -100,13 +95,13 @@ class HomeController extends AbstractController
         $query = $request->query->get('q', '');
         $photos = $photoRepository->search($query);
 
-        // Map the photos to an array that includes the URL of each photo
+        // On retourne un tableau de photos
         $photos = array_map(function ($photo) {
             return [
                 'id' => $photo->getId(),
                 'title' => $photo->getTitle(),
-                'url' => $this->generateUrl('app_display_photo', ['slug' => $photo->getSlug()]), // Generate the URL of the photo
-                'thumbnailUrl' => $photo->getUrl(), // Use the photo URL as the thumbnail URL
+                'url' => $this->generateUrl('app_display_photo', ['slug' => $photo->getSlug()]),
+                'thumbnailUrl' => $photo->getUrl(),
             ];
         }, $photos);
 

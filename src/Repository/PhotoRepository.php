@@ -21,6 +21,11 @@ class PhotoRepository extends ServiceEntityRepository
         parent::__construct($registry, Photo::class);
     }
 
+    /**
+     * Cherche les photos par titre, description ou tags
+     * @param string $query
+     * @return array
+     */
     public function search(string $query): array
     {
         return $this->createQueryBuilder('p')
@@ -33,6 +38,11 @@ class PhotoRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Cherche les photos par tags
+     * @param array $tags
+     * @return array
+     */
     public function findByTags(array $tags): array
     {
         return $this->createQueryBuilder('p')
@@ -42,28 +52,4 @@ class PhotoRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    //    /**
-    //     * @return Photo[] Returns an array of Photo objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Photo
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

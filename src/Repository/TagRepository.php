@@ -21,17 +21,11 @@ class TagRepository extends ServiceEntityRepository
         parent::__construct($registry, Tag::class);
     }
 
-    //FindByName
-    public function findByName(string $name): ?Tag
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.name = :name')
-            ->setParameter('name', $name)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
+    /**
+     * Cherche les tags les plus utilisés
+     * @param int $limit
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     public function findMostUsedTags(int $limit)
     {
         return $this->createQueryBuilder('t')
@@ -41,29 +35,4 @@ class TagRepository extends ServiceEntityRepository
             ->orderBy('count', 'DESC')
             ->setMaxResults($limit);
     }
-
-    //    /**
-    //     * @return Tag[] Returns an array of Tag objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Tag
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }
