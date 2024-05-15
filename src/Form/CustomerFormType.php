@@ -24,8 +24,14 @@ class CustomerFormType extends AbstractType
             ->add('age', IntegerType::class, [
                 'attr' => ['class' => 'form-control', 'placeholder' => 'Age']
             ])
+            ->add('phone', TextType::class, [
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Phone']
+            ])
             ->add('address', TextType::class, [
                 'attr' => ['class' => 'form-control', 'placeholder' => 'Address']
+            ])
+            ->add('postalCode', TextType::class, [
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Postal Code']
             ])
             ->add('city', TextType::class, [
                 'attr' => ['class' => 'form-control', 'placeholder' => 'City']

@@ -11,6 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+#[isGranted('ROLE_ADMIN')]
 
 #[Route('/admin/photo')]
 class AdminPhotoController extends AbstractController
@@ -70,6 +73,11 @@ class AdminPhotoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('file')->getData();
+            if ($file) {
+                $fileName = $this->fileUploader->upload($file);
+                $photo->setUrl($fileName);
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_admin_photo_index', [], Response::HTTP_SEE_OTHER);
