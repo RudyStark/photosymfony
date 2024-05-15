@@ -7,15 +7,14 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[Route('/order')]
 #[IsGranted('ROLE_CUSTOMER')]
 class OrderController extends AbstractController
 {
-    #[Route('/order', name: 'app_order')]
+    #[Route('/details', name: 'app_order_details')]
     public function index(): Response
     {
-        // place for add order on data and display it !
-        return $this->render('order/admin_base.html.twig', [
-            'controller_name' => 'OrderController',
+        return $this->render('order/index.html.twig', [
         ]);
     }
 }
