@@ -1,0 +1,5 @@
+{% for photo in photos %}
+    <div>
+        <img src="{{ photo.getUrl() }}" alt="{{ photo.getSlug() }}">
+    </div>
+{% endfor %}

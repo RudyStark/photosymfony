@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Photo;
+use App\Form\TagFormType;
 use App\Repository\PhotoRepository;
-use App\Service\SearchService;
+use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,12 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(PhotoRepository $photoRepository): Response
+    public function index(PhotoRepository $photoRepository, TagRepository $tagRepository): Response
     {
         $photos = $photoRepository->findAll();
+        $form = $this->createForm(TagFormType::class);
 
         return $this->render('home/index.html.twig', [
             'photos' => $photos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -45,36 +48,43 @@ class HomeController extends AbstractController
         ]);
     }
 
-    //Search
-    #[Route('/search', name: 'app_search')]
-    public function search(Request $request, SearchService $searchService, SessionInterface $session): Response
+    #[Route('/tags', name: 'app_tags', methods: ['GET', 'POST'])]
+    public function tags(Request $request, TagRepository $tagRepository): Response
     {
-        $query = $request->query->get('query', '');
+        $form = $this->createForm(TagFormType::class);
+        $form->handleRequest($request);
 
-        $photos = $searchService->searchByQuery($query);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $tags = $form->get('name')->getData();
 
-        if (empty($query)) {
-            $session->getFlashBag()->add('info', 'Votre recherche est vide, voici toutes les photos.');
+            // Convert ArrayCollection to array
+            $tagsArray = $tags->toArray();
+
+            // Convert array to string
+            $tagsString = implode(',', array_map(function ($tag) { return $tag->getName(); }, $tagsArray));
+
+            return $this->redirectToRoute('app_photos_by_tags', [
+                'tags' => $tagsString,
+            ]);
         }
 
-        return $this->render('photo/search.html.twig', [
-            'photos' => $photos,
+        return $this->render('home/photo.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
-    /**
-     * Recherche des photos par tag
-     * @param string $tagName
-     * @param SearchService $searchService
-     * @return Response
-     */
-    #[Route('/search/tag/{tagName}', name: 'app_search_tag')]
-    public function searchByTag(string $tagName, SearchService $searchService): Response
+    #[Route('/photos/{tags}', name: 'app_photos_by_tags')]
+    public function photosByTags(string $tags, PhotoRepository $photoRepository): Response
     {
-        $photos = $searchService->searchByQuery($tagName);
+        $tags = explode(',', $tags);
+        $photos = $photoRepository->findByTags($tags);
 
-        return $this->render('photo/search.html.twig', [
+        // Create an instance of the form
+        $form = $this->createForm(TagFormType::class);
+
+        return $this->render('home/index.html.twig', [
             'photos' => $photos,
+            'form' => $form->createView(), // Pass the form to the template
         ]);
     }
 
