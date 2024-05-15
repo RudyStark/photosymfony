@@ -33,12 +33,7 @@
                     </li>
                 {% endif %}
             </ul>
-            <form class="d-flex" action="{{ path('app_tags') }}" method="post">
-                {{ form_start(form, {'attr': {'class': 'd-flex'}}) }}
-                {{ form_widget(form.name, {'attr': {'class': 'form-control me-2'}}) }}
-                <button class="btn btn-outline-success" type="submit">Ok</button>
-                {{ form_end(form) }}
-            </form>
+            {{ render(controller('App\\Controller\\SearchFormController::searchForm')) }}
             <div data-controller="autocomplete" class="position-relative">
                 <form class="d-flex" action="{{ path('app_search') }}" method="get">
                     <input class="form-control me-2" type="search" id="search" name="q" placeholder="Recherche" aria-label="Search" data-autocomplete-target="input" data-action="autocomplete#search" data-autocomplete-url="{{ path('app_search') }}" />

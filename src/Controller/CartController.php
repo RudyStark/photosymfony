@@ -27,7 +27,7 @@ class CartController extends AbstractController
         $items = $this->cartService->getCart();
         $cartTotal = $this->cartService->getTotalCart();
 
-        return $this->render('cart/index.html.twig', [
+        return $this->render('cart/admin_base.html.twig', [
             'subtotal' => $cartTotal['subtotal'],
             'tva' => $cartTotal['tva'],
             'total' => $cartTotal['total'],

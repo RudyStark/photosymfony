@@ -13,14 +13,12 @@ use Symfony\Component\HttpFoundation\Request;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(PhotoRepository $photoRepository, TagRepository $tagRepository): Response
+    public function index(PhotoRepository $photoRepository): Response
     {
         $photos = $photoRepository->findAll();
-        $form = $this->createForm(TagFormType::class);
 
         return $this->render('home/index.html.twig', [
             'photos' => $photos,
-            'form' => $form->createView(),
         ]);
     }
 

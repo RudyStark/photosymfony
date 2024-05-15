@@ -1,0 +1,62 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block admin_content %}
+    <h1>User</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ user.customer.lastname }}</td>
+            </tr>
+            <tr>
+                <th>Prénom</th>
+                <td>{{ user.customer.firstname }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ user.customer.address }}</td>
+            </tr>
+            <tr>
+                <th>Code postal</th>
+                <td>{{ user.customer.postalCode }}</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ user.customer.city }}</td>
+            </tr>
+            <tr>
+                <th>Pays</th>
+                <td>{{ user.customer.country }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ user.customer.phone }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_user_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_user_edit', {'id': user.id}) }}">edit</a>
+
+    {{ include('admin/admin_user/_delete_form.html.twig') }}
+{% endblock %}

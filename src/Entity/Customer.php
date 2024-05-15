@@ -24,11 +24,17 @@ class Customer
     #[ORM\Column]
     private ?int $age = null;
 
+    #[ORM\Column(length: 20)]
+    private ?string $phone = null;
+
     #[ORM\Column(length: 255)]
     private ?string $address = null;
 
     #[ORM\Column(length: 255)]
     private ?string $city = null;
+
+    #[ORM\Column(length: 10)]
+    private ?string $postalCode = null;
 
     #[ORM\Column(length: 255)]
     private ?string $country = null;
@@ -89,6 +95,18 @@ class Customer
         return $this;
     }
 
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
     public function getAddress(): ?string
     {
         return $this->address;
@@ -109,6 +127,18 @@ class Customer
     public function setCity(string $city): static
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
 
         return $this;
     }
