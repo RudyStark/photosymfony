@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la Commande{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Détails de la Commande</h2>
+    <div class="order-details">
+        <p><strong>ID de la commande :</strong> {{ order.id }}</p>
+        <p><strong>Date :</strong> {{ order.createdAt|date('d/m/Y') }}</p>
+        <p><strong>Statut :</strong> {{ order.statutOrder.name }}</p>
+        <p><strong>Mode de paiement :</strong> {{ order.paymentMode }}</p>
+        <p><strong>Mode de livraison :</strong> {{ order.deliveryMode }}</p>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.orderItems %}
+            <tr>
+                <td>{{ item.photo.title }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price|number_format(2, ',', ' ') }} €</td>
+                <td>{{ (item.price * item.quantity)|number_format(2, ',', ' ') }} €</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="total-price">
+        <p><strong>Total de la commande :</strong> {{ order.getTotalPrice()|number_format(2, ',', ' ') }} €</p>
+    </div>
+</div>
+{% endblock %}

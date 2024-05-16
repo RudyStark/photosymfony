@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Récapitulatif de la commande{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Récapitulatif de la commande</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix HT</th>
+                <th>TVA</th>
+                <th>Total TTC</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.title }}</td>
+                <td>{{ item.qty }}</td>
+                <td>{{ item.priceHT|format_currency('EUR', locale='fr') }}</td>
+                <td>{{ item.tva|format_currency('EUR', locale='fr') }}</td>
+                <td>{{ item.price|format_currency('EUR', locale='fr') }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">Votre panier est vide.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        <ul>
+            <li>Total HT: {{ subtotal|format_currency('EUR', locale='fr') }}</li>
+            <li>TVA: {{ tva|format_currency('EUR', locale='fr') }}</li>
+            <li>Total TTC: {{ total|format_currency('EUR', locale='fr') }}</li>
+        </ul>
+    </div>
+    <form action="{{ path('app_order_confirm') }}" method="post">
+        <input type="hidden" name="orderId" value="{{ orderId }}">
+        <div>
+            <label for="deliveryMode">Mode de livraison:</label>
+            <select id="deliveryMode" name="deliveryMode">
+                <option value="standard">Standard</option>
+                <option value="express">Express</option>
+            </select>
+        </div>
+        <div>
+            <label for="paymentMode">Mode de paiement:</label>
+            <select id="paymentMode" name="paymentMode">
+                <option value="card">Carte</option>
+                <option value="paypal">PayPal</option>
+            </select>
+        </div>
+        <button type="submit">Confirmer la commande</button>
+    </form>
+</div>
+{% endblock %}

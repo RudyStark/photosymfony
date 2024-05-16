@@ -24,10 +24,20 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 
+    #[ORM\ManyToOne(targetEntity: StatutOrder::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?StatutOrder $statutOrder = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $deliveryMode = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $paymentMode = null;
+
     /**
      * @var Collection<int, OrderItem>
      */
-    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'orders', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'orders', orphanRemoval: true, cascade: ['persist'])]
     private Collection $orderItems;
 
     public function __construct()
@@ -49,6 +59,40 @@ class Order
     {
         $this->customer = $customer;
 
+        return $this;
+    }
+
+    public function getStatutOrder(): ?StatutOrder
+    {
+        return $this->statutOrder;
+    }
+
+    public function setStatutOrder(?StatutOrder $statutOrder): static
+    {
+        $this->statutOrder = $statutOrder;
+
+        return $this;
+    }
+
+    public function getDeliveryMode(): ?string
+    {
+        return $this->deliveryMode;
+    }
+
+    public function setDeliveryMode(?string $deliveryMode): self
+    {
+        $this->deliveryMode = $deliveryMode;
+        return $this;
+    }
+
+    public function getPaymentMode(): ?string
+    {
+        return $this->paymentMode;
+    }
+
+    public function setPaymentMode(?string $paymentMode): self
+    {
+        $this->paymentMode = $paymentMode;
         return $this;
     }
 
@@ -80,5 +124,22 @@ class Order
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        if (!$this->getCreatedAt()) {
+            $this->setCreatedAt(new \DateTimeImmutable());
+        }
+    }
+
+    public function getTotalPrice(): float
+    {
+        $total = 0.0;
+        foreach ($this->orderItems as $item) {
+            $total += $item->getPrice() * $item->getQuantity();
+        }
+        return $total;
     }
 }

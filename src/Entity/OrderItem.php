@@ -27,6 +27,12 @@ class OrderItem
     #[ORM\JoinColumn(nullable: false)]
     private ?Photo $photo = null;
 
+    public function __toString(): string
+    {
+        // Return a string that can help identify this entity, for example:
+        return $this->id ? 'OrderItem ID: ' . $this->id : 'New OrderItem';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -20,6 +20,11 @@
                         <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
                     </li>
                 {% else %}
+                    {% if is_granted('ROLE_CUSTOMER') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_my_orders') }}">Mes commandes</a>
+                        </li>
+                    {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('app_admin_index') }}">Admin</a>

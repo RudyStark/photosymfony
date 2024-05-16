@@ -1,0 +1,70 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Order Details{% endblock %}
+
+{% block admin_content %}
+    <h1>Order Details</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ order.id }}</td>
+            </tr>
+            <tr>
+                <th>Email Customer</th>
+                <td>{{ order.customer.user.email }}</td>
+            </tr>
+            <tr>
+                <th>DeliveryMode</th>
+                <td>{{ order.deliveryMode }}</td>
+            </tr>
+            <tr>
+                <th>PaymentMode</th>
+                <td>{{ order.paymentMode }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Order Items</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Photo Title</th>
+                <th>Quantity</th>
+                <th>Price per Item</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.orderItems %}
+            <tr>
+                <td>{{ item.photo.title }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.quantity * item.price }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">No items found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3">Total Order Price</th>
+                <th>{{ order.getTotalPrice() }}</th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <a href="{{ path('app_admin_order_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_order_edit', {'id': order.id}) }}">edit</a>
+
+    {{ include('admin/admin_order/_delete_form.html.twig') }}
+{% endblock %}
