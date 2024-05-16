@@ -7,20 +7,29 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
+#[ApiResource(normalizationContext: ['groups' => ['tag:read']], denormalizationContext: ['groups' => ['tag:write']])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
 class Tag
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['tag:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['tag:read', 'tag:write', 'photo:read'])]
     private ?string $name = null;
 
     #[Gedmo\Slug(fields: ['name'], unique: true)]
     #[ORM\Column(length: 255)]
+    #[Groups(['tag:read'])]
     private ?string $slug = null;
 
     /**

@@ -9,8 +9,14 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\TimestampableTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource(normalizationContext: ['groups' => ['photo:read']], denormalizationContext: ['groups' => ['photo:write']])]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'title' => 'partial', 'slug' => 'exact'])]
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
 class Photo
 {
@@ -19,25 +25,32 @@ class Photo
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['photo:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['photo:read', 'photo:write', 'tag:read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['photo:read', 'photo:write'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['photo:read', 'photo:write'])]
     private ?string $url = null;
 
     #[ORM\Column]
+    #[Groups(['photo:read', 'photo:write'])]
     private ?float $price = null;
 
     #[Gedmo\Slug(fields: ['title'])]
     #[ORM\Column(length: 128, unique: true)]
+    #[Groups(['photo:read'])]
     private ?string $slug = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['photo:read', 'photo:write'])]
     private ?array $metaInfo = null;
 
     private $file;
@@ -46,6 +59,7 @@ class Photo
      * @var Collection<int, Tag>
      */
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'photos')]
+    #[Groups(['photo:read', 'photo:write'])]
     private Collection $tags;
 
     /**
