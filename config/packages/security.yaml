@@ -9,7 +9,21 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+
     firewalls:
+        api:
+            pattern: ^/api
+            stateless: true
+            json_login:
+                provider: app_user_provider
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            jwt: ~
+
+        api_doc:
+            pattern: ^/api/docs
+            security: false
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -34,6 +48,10 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+         - { path: ^/api,       roles: PUBLIC_ACCESS }
+         - { path: ^/docs, roles: PUBLIC_ACCESS }
+#         - { path: ^/api/user/profile,     roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
