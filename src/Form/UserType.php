@@ -21,7 +21,6 @@ class UserType extends AbstractType
                     'Customer' => 'ROLE_CUSTOMER',
                     'Admin' => 'ROLE_ADMIN',
                     'API User' => 'ROLE_API',
-                    // Ajoutez d'autres rôles selon vos besoins
                 ],
                 'expanded' => false, // false pour un select, true pour des checkboxes
                 'multiple' => true,

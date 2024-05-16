@@ -36,7 +36,7 @@ class CartService
             $cart[$photoId]['qty'] += $quantity;
         } else {
             $cart[$photoId] = [
-                'photoId' => $photoId, // Ajout de l'id de la photo
+                'photoId' => $photoId,
                 'qty' => $quantity,
                 'price' => $photo->getPrice(),
                 'title' => $photo->getTitle(),
