@@ -1,0 +1,43 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Order index{% endblock %}
+
+{% block admin_content %}
+    <h1>Order index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email Customer</th>
+                <th>DeliveryMode</th>
+                <th>PaymentMode</th>
+                <th>CreatedAt</th>
+                <th>ModifiedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.customer.user.email }}</td>
+                <td>{{ order.deliveryMode }}</td>
+                <td>{{ order.paymentMode }}</td>
+                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ order.modifiedAt ? order.modifiedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_admin_order_show', {'id': order.id}) }}">show</a>
+                    <a href="{{ path('app_admin_order_edit', {'id': order.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_order_new') }}">Create new</a>
+{% endblock %}

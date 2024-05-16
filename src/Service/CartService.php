@@ -36,6 +36,7 @@ class CartService
             $cart[$photoId]['qty'] += $quantity;
         } else {
             $cart[$photoId] = [
+                'photoId' => $photoId, // Ajout de l'id de la photo
                 'qty' => $quantity,
                 'price' => $photo->getPrice(),
                 'title' => $photo->getTitle(),
@@ -108,5 +109,11 @@ class CartService
 
             $this->session->set('cart', $cart);
         }
+    }
+
+    // vide le panier
+    public function emptyCart(): void
+    {
+        $this->session->set('cart', []);
     }
 }
