@@ -15,7 +15,7 @@
             </div>
             <div class="toast-body">
                 <p class="text-center">
-                    <img src="{{ photo.url }}" class="img-fluid" alt="{{ photo.title }}">
+                    <img src="{{ photo.url starts with 'http' ? photo.url : asset('uploads/' ~ photo.url) }}" class="img-fluid" alt="{{ photo.title }}">
                     <strong>La photo {{ photo.title }} a été ajoutée au panier</strong></p>
                 <p class="text-center"><a href="{{ path('app_cart') }}" class="btn btn-success"><i class="icon-view-show"></i> Voir la panier</a></p>
             </div>

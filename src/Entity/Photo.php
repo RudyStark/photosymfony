@@ -72,6 +72,8 @@ class Photo
     {
         $this->tags = new ArrayCollection();
         $this->orderItems = new ArrayCollection();
+        // par sécurité (pour le test API)
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int

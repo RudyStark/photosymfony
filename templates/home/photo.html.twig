@@ -6,7 +6,7 @@
     <div class="container mt-4">
         <div class="row justify-content-center">
             <div class="col-12 col-md-8">
-                <img src="{{ photo.url }}" class="img-fluid" alt="Photo description">
+                <img src="{{ photo.url starts with 'http' ? photo.url : asset('uploads/' ~ photo.url) }}" class="img-fluid" alt="Photo description">
                 <h3 class="mt-2 text-center">{{ photo.title }}</h3>
                 <p>{{ photo.description }}</p>
                 <p class="fw-bold">Tags:

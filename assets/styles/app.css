@@ -4,6 +4,10 @@ body {
     background-color: #f0f8ff;
 }
 
+.img-home {
+    max-height: 300px;
+}
+
 /*.card {*/
 /*    border: none;*/
 /*    transition: transform .2s;*/

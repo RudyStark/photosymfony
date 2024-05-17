@@ -24,7 +24,8 @@
                     {% for id, item in items %}
                         <tr>
                             <td class="cart_product_img">
-                                <a href="{{ path('app_display_photo', {'slug' : item.slug })}}"><img src="{{ item.url }}" alt="{{ item.title }}" width="100"></a>
+
+                                <a href="{{ path('app_display_photo', {'slug' : item.slug })}}"><img src="{{ item.url starts with 'http' ? item.url : asset('uploads/' ~ item.url) }}" alt="{{ item.title }}" width="50" height="50"></a>
                             </td>
                             <td class="cart_product_desc">
                                 <h5><a href="{{ path('app_display_photo', {'slug' : item.slug })}}">{{ item.title }}</a></h5>
